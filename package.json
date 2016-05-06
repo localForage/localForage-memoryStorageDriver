@@ -1,0 +1,41 @@
+{
+  "name": "localforage-memoryStorageDriver",
+  "version": "0.9.0",
+  "description": "A volatile, in memory storage driver for localForage.",
+  "homepage": "https://github.com/localForage-extensions/localForage-memoryStorageDriver",
+  "main": "src/localforage-memoryStorageDriver.js",
+  "jsnext:main": "dist/localforage-memoryStorageDriver.es6.js",
+  "scripts": {
+    "prebuild": "eslint lib test",
+    "build": "rollup -c rollup.config.umd.js && rollup -c rollup.config.es6.js",
+    "pretest": "rollup -c rollup.config.test.js",
+    "test": "mocha build/test-bundle.js",
+    "prepublish": "npm run build && npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/localForage-extensions/localForage-memoryStorageDriver.git"
+  },
+  "keywords": [
+    "localforage",
+    "plugin"
+  ],
+  "author": "Thodoris Greasidis",
+  "licence": "Apache-2.0",
+  "bugs": {
+    "url": "http://github.com/localForage-extensions/localForage-memoryStorageDriver/issues"
+  },
+  "devDependencies": {
+    "babel-eslint": "^6.0.4",
+    "babel-preset-es2015-rollup": "^1.1.1",
+    "eslint": "^2.8.0",
+    "mocha": "^2.4.5",
+    "rollup": "^0.26.1",
+    "rollup-plugin-babel": "^2.4.0",
+    "rollup-plugin-multi-entry": "^1.2.0",
+    "source-map-support": "^0.4.0"
+  },
+  "dependencies": {
+    "localforage": ">=1.4.0"
+  }
+}
