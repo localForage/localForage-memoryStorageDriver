@@ -38,15 +38,6 @@
             }
         }
 
-        // dbInfo.subStorageName = dbInfo.name;
-
-        // if (dbInfo.storeName !== self._defaultConfig.storeName) {
-        //     dbInfo.subStorageName += '/' + dbInfo.storeName;
-        // }
-
-        // storageRepository[dbInfo.subStorageName] = storageRepository[dbInfo.subStorageName] || {};
-        // dbInfo.db = storageRepository[dbInfo.subStorageName];
-
         var database = storageRepository[dbInfo.name] = storageRepository[dbInfo.name] || {};
         var table = database[dbInfo.storeName] = database[dbInfo.storeName] || {};
         dbInfo.db = table;
@@ -60,19 +51,14 @@
 
     function clear(callback) {
         var self = this;
-        var promise = new Promise(function (resolve, reject) {
-            self.ready().then(function () {
-                var db = self._dbInfo.db;
+        var promise = self.ready().then(function () {
+            var db = self._dbInfo.db;
 
-                for (var key in db) {
-                    if (db.hasOwnProperty(key)) {
-                        delete db[key];
-                        // db[key] = undefined;
-                    }
+            for (var key in db) {
+                if (db.hasOwnProperty(key)) {
+                    delete db[key];
                 }
-
-                resolve();
-            }).catch(reject);
+            }
         });
 
         executeCallback(promise, callback);
@@ -88,50 +74,43 @@
             key = String(key);
         }
 
-        var promise = new Promise(function (resolve, reject) {
-            self.ready().then(function () {
-                try {
-                    var db = self._dbInfo.db;
-                    var result = db[key];
+        var promise = self.ready().then(function () {
+            var db = self._dbInfo.db;
+            var result = db[key];
 
-                    if (result) {
-                        result = self._dbInfo.serializer.deserialize(result);
-                    }
+            if (result) {
+                result = self._dbInfo.serializer.deserialize(result);
+            }
 
-                    resolve(result);
-                } catch (e) {
-                    reject(e);
-                }
-            }).catch(reject);
+            return result;
         });
 
         executeCallback(promise, callback);
         return promise;
     }
 
-    function iterate(callback) {
+    function iterate(iterator, callback) {
         var self = this;
 
-        var promise = new Promise(function (resolve, reject) {
-            self.ready().then(function () {
-                try {
-                    var db = self._dbInfo.db;
+        var promise = self.ready().then(function () {
+            var db = self._dbInfo.db;
 
-                    for (var key in db) {
-                        var result = db[key];
+            var iterationNumber = 1;
+            for (var key in db) {
+                if (db.hasOwnProperty(key)) {
+                    var value = db[key];
 
-                        if (result) {
-                            result = self._dbInfo.serializer.deserialize(result);
-                        }
-
-                        callback(result, key);
+                    if (value) {
+                        value = self._dbInfo.serializer.deserialize(value);
                     }
 
-                    resolve();
-                } catch (e) {
-                    reject(e);
+                    value = iterator(value, key, iterationNumber++);
+
+                    if (value !== void 0) {
+                        return value;
+                    }
                 }
-            }).catch(reject);
+            }
         });
 
         executeCallback(promise, callback);
@@ -140,24 +119,22 @@
 
     function key(n, callback) {
         var self = this;
-        var promise = new Promise(function (resolve, reject) {
-            self.ready().then(function () {
-                var db = self._dbInfo.db;
-                var result = null;
-                var index = 0;
+        var promise = self.ready().then(function () {
+            var db = self._dbInfo.db;
+            var result = null;
+            var index = 0;
 
-                for (var key in db) {
-                    if (db.hasOwnProperty(key) && db[key] !== undefined) {
-                        if (n === index) {
-                            result = key;
-                            break;
-                        }
-                        index++;
+            for (var key in db) {
+                if (db.hasOwnProperty(key)) {
+                    if (n === index) {
+                        result = key;
+                        break;
                     }
+                    index++;
                 }
+            }
 
-                resolve(result);
-            }).catch(reject);
+            return result;
         });
 
         executeCallback(promise, callback);
@@ -166,19 +143,17 @@
 
     function keys(callback) {
         var self = this;
-        var promise = new Promise(function (resolve, reject) {
-            self.ready().then(function () {
-                var db = self._dbInfo.db;
-                var keys = [];
+        var promise = self.ready().then(function () {
+            var db = self._dbInfo.db;
+            var keys = [];
 
-                for (var key in db) {
-                    if (db.hasOwnProperty(key)) {
-                        keys.push(key);
-                    }
+            for (var key in db) {
+                if (db.hasOwnProperty(key)) {
+                    keys.push(key);
                 }
+            }
 
-                resolve(keys);
-            }).catch(reject);
+            return keys;
         });
 
         executeCallback(promise, callback);
@@ -187,10 +162,8 @@
 
     function length(callback) {
         var self = this;
-        var promise = new Promise(function (resolve, reject) {
-            self.keys().then(function (keys) {
-                resolve(keys.length);
-            }).catch(reject);
+        var promise = self.keys().then(function (keys) {
+            return keys.length;
         });
 
         executeCallback(promise, callback);
@@ -206,16 +179,11 @@
             key = String(key);
         }
 
-        var promise = new Promise(function (resolve, reject) {
-            self.ready().then(function () {
-                var db = self._dbInfo.db;
-                if (db.hasOwnProperty(key)) {
-                    delete db[key];
-                    // db[key] = undefined;
-                }
-
-                resolve();
-            }).catch(reject);
+        var promise = self.ready().then(function () {
+            var db = self._dbInfo.db;
+            if (db.hasOwnProperty(key)) {
+                delete db[key];
+            }
         });
 
         executeCallback(promise, callback);
@@ -231,31 +199,33 @@
             key = String(key);
         }
 
-        var promise = new Promise(function (resolve, reject) {
-            self.ready().then(function () {
-                // Convert undefined values to null.
-                // https://github.com/mozilla/localForage/pull/42
-                if (value === undefined) {
-                    value = null;
-                }
+        var promise = self.ready().then(function () {
+            // Convert undefined values to null.
+            // https://github.com/mozilla/localForage/pull/42
+            if (value === undefined) {
+                value = null;
+            }
 
-                // Save the original value to pass to the callback.
-                var originalValue = value;
+            // Save the original value to pass to the callback.
+            var originalValue = value;
 
-                self._dbInfo.serializer.serialize(value, function (value, error) {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        try {
-                            var db = self._dbInfo.db;
-                            db[key] = value;
-                            resolve(originalValue);
-                        } catch (e) {
-                            reject(e);
+            function serializeAsync(value) {
+                return new Promise(function (resolve, reject) {
+                    self._dbInfo.serializer.serialize(value, function (value, error) {
+                        if (error) {
+                            reject(error);
+                        } else {
+                            resolve(value);
                         }
-                    }
+                    });
                 });
-            }).catch(reject);
+            }
+
+            return serializeAsync(value).then(function (value) {
+                var db = self._dbInfo.db;
+                db[key] = value;
+                return originalValue;
+            });
         });
 
         executeCallback(promise, callback);
