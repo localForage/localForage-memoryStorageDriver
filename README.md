@@ -2,6 +2,10 @@
 
 A volatile, in memory storage driver for [localForage](https://github.com/mozilla/localForage).
 
+## Requirements
+
+* [localForage](https://github.com/mozilla/localForage) v1.4.0+
+
 ## Example
 
 ```js
