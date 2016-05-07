@@ -1,6 +1,13 @@
 # localforage-memoryStorageDriver
 
-A volatile, in memory storage driver for [localForage](https://github.com/mozilla/localForage).
+A **volatile**, in memory storage driver for [localForage](https://github.com/mozilla/localForage).
+
+**The stored data are lost after a page reload.**
+Originally designed for unit-testing (especially SPAs) and as a fallback for environmets without any storage APIs.
+
+This driver serializes the stored items, so that
+* it works consistently compared to the "native" localForage driver
+* modifications of retrieved (complex) objects do not affect the stored items.
 
 ## Requirements
 
