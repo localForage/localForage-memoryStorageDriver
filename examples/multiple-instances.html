@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf8" />
+    <title>Simple localForage-memoryStorageDriver example</title>
+  </head>
+  <body>
+    <script src="../node_modules/localforage/dist/localforage.js"></script>
+    <script src="../dist/localforage-memoryStorageDriver.js"></script>
+    <script>
+      localforage.defineDriver(memoryStorageDriver).then(function() {
+        var instances = [
+          localforage.createInstance({
+            name: 'storage1',
+            size: 1024,
+            storeName: 'storagename1',
+            driver: memoryStorageDriver._driver
+          }),
+          localforage.createInstance({
+            name: 'storage1',
+            size: 1024,
+            storeName: 'storagename2',
+            driver: memoryStorageDriver._driver
+          }),
+          localforage.createInstance({
+            name: 'storage2',
+            size: 1024,
+            storeName: 'storagename1',
+            driver: memoryStorageDriver._driver
+          })
+        ];
+
+        Promise.all(instances.map(function(instance) {
+          return instance.ready().then(function() {
+            console.log(instance.driver());
+          });
+        })).then(function() {
+          return instances[0].setItem('item1', 'value1');
+        }).then(function() {
+          return instances[1].setItem('item1', 'value2');
+        }).then(function() {
+          return instances[2].setItem('item1', 'value3');
+        }).then(function() {  
+          return Promise.all(instances.map(function(instance) {
+            return instance.getItem('item1');
+          }));
+        }).then(function(results) {
+          console.log(results);
+        }).then(function() {
+          var mirrorInstance = localforage.createInstance({
+            name: 'storage1',
+            size: 1024,
+            storeName: 'storagename1',
+            driver: memoryStorageDriver._driver
+          });
+          return mirrorInstance.ready().then(function() {
+            return mirrorInstance.getItem('item1');
+          }).then(function(result) {
+            console.log('Value from the mirror of the first instance: ' + result);
+          });
+        });
+      });
+    </script>
+
+    <p>
+      Check your console log.
+    </p>
+  </body>
+</html>
