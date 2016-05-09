@@ -1,4 +1,6 @@
-# localforage-memoryStorageDriver
+localforage-memoryStorageDriver
+=================================
+[![npm](https://img.shields.io/npm/dm/localforage-memoryStorageDriver.svg)](https://www.npmjs.com/package/localforage-memoryStorageDriver)
 
 A **volatile**, in memory storage driver for [localForage](https://github.com/mozilla/localForage).
 
@@ -12,6 +14,9 @@ This driver serializes the stored items, so that
 ## Requirements
 
 * [localForage](https://github.com/mozilla/localForage) v1.4.0+
+
+## Installation
+`npm i localforage-memoryStorageDriver`
 
 ## Example
 
