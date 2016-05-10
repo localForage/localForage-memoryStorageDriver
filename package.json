@@ -1,6 +1,6 @@
 {
   "name": "localforage-memoryStorageDriver",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "A volatile, in memory storage driver for localForage.",
   "homepage": "https://github.com/localForage-extensions/localForage-memoryStorageDriver",
   "main": "dist/localforage-memoryStorageDriver.js",
