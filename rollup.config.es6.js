@@ -1,6 +1,6 @@
 import config from './rollup.config';
 
 config.format = 'es6';
-config.dest = 'dist/localforage-observable.es6.js';
+config.dest = 'dist/localforage-memoryStorageDriver.es6.js';
 
 export default config;
