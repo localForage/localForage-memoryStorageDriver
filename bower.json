@@ -1,0 +1,23 @@
+{
+  "name": "localforage-memoryStorageDriver",
+  "description": "A volatile, in memory storage driver for localForage.",
+  "main": "dist/localforage-memoryStorageDriver.js",
+  "authors": [
+    "Thodoris Greasidis"
+  ],
+  "license": "Apache v2.0",
+  "keywords": [
+    "localforage",
+    "plugin",
+    "memory",
+    "storage"
+  ],
+  "homepage": "https://github.com/localForage-extensions/localForage-memoryStorageDriver",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
