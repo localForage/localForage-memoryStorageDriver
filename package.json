@@ -3,7 +3,7 @@
   "version": "0.9.0",
   "description": "A volatile, in memory storage driver for localForage.",
   "homepage": "https://github.com/localForage-extensions/localForage-memoryStorageDriver",
-  "main": "src/localforage-memoryStorageDriver.js",
+  "main": "dist/localforage-memoryStorageDriver.js",
   "jsnext:main": "dist/localforage-memoryStorageDriver.es6.js",
   "scripts": {
     "prebuild": "eslint lib test",
