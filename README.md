@@ -19,7 +19,7 @@ This driver serializes the stored items, so that
 `npm i localforage-memoryStorageDriver`
 
 ## Example
-
+[jsfiddle](https://jsfiddle.net/dp2dzyL9/)
 ```js
 localforage.defineDriver(memoryStorageDriver).then(function() {
   return localforage.setDriver(memoryStorageDriver._driver);
